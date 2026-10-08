@@ -17,13 +17,23 @@ models/               teacher.pt（PPO 老师）、student.pt（蒸馏读出层�
 TRAINING_PLAN.md      下一步训练的完整提示词/策略（可直接喂给 agent）
 ```
 
-## 大脑数据怎么复现（重要：1GB 连接组不在仓库里）
+## 大脑数据怎么复现（重要）
 
-果蝇脑连接组本体 **不在本仓库**（`edges.feather` 约 1GB，超 GitHub 100MB 单文件限制）。它是公开数据集 MaleCNS v1.0 的派生文件，获取方式：
+大脑数据分两部分：
 
-- 克隆上游 `nftechie/doomfly`，按其 README 运行数据构建（`build_kernel.py`，Windows 下 clang++ 改 g++）
-- 复现校验：本仓库 `data-reference/data-integrity.json` 记录了原文件哈希（166,700 神经元 / 25,582,938 边 / 124,177,617 接触），构建后逐一比对即可确认与本实验用的是同一份脑
-- 原始脑快照（训练前未改动版本）在本机 `D:\fly\brain-snapshot\v0-original\malecns_v1\`（11 文件 1.37GB），可按需用 Git LFS 另存
+**已在仓库内（小文件，<100MB）**：`data-reference/brain-snapshot-v0/`
+- annotations.feather、neurotransmitters.feather、source.lock.json、normalized/ 下 catalog/neurons/npy/report
+
+**大文件（超 GitHub 100MB 限制，需从 Releases 下载）**：
+| 文件 | 大小 | 作用 |
+|---|---|---|
+| `graph.npz` | 239 MB | **仿真直接加载的脑图**（Brain 类用它） |
+| `edges.feather` | 1.0 GB | MaleCNS 原始连接边（上游构建） |
+| `normalized/edges.arrow` | 293 MB | 归一化后边表 |
+
+下载后放到 `outputs/doom/malecns_v1/` 即可。校验：仓库内 `data-reference/data-integrity.json` 记录了哈希（166,700 神经元 / 25,582,938 边 / 124,177,617 接触）。
+
+> 这是 MaleCNS v1.0 公开数据集的派生文件，上游 `nftechie/doomfly` 的构建脚本也能生成。
 
 ## 环境
 
