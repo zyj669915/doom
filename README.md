@@ -24,16 +24,26 @@ TRAINING_PLAN.md      下一步训练的完整提示词/策略（可直接喂给
 **已在仓库内（小文件，<100MB）**：`data-reference/brain-snapshot-v0/`
 - annotations.feather、neurotransmitters.feather、source.lock.json、normalized/ 下 catalog/neurons/npy/report
 
-**大文件（超 GitHub 100MB 限制，需从 Releases 下载）**：
+**大文件（超 GitHub 100MB 限制，从 Releases 下载）**：
+
 | 文件 | 大小 | 作用 |
 |---|---|---|
 | `graph.npz` | 239 MB | **仿真直接加载的脑图**（Brain 类用它） |
 | `edges.feather` | 1.0 GB | MaleCNS 原始连接边（上游构建） |
 | `normalized/edges.arrow` | 293 MB | 归一化后边表 |
 
-下载后放到 `outputs/doom/malecns_v1/` 即可。校验：仓库内 `data-reference/data-integrity.json` 记录了哈希（166,700 神经元 / 25,582,938 边 / 124,177,617 接触）。
+**拉取方法（一键）**：
+```powershell
+# 从仓库根目录跑：
+.\scripts\fetch_brain.ps1                    # 拉原始 v0 脑
+.\scripts\fetch_brain.ps1 -Tag brain-v1      # 拉训练后的新版本脑
+```
+脚本会自动建目录、跳过已存在的文件。
 
-> 这是 MaleCNS v1.0 公开数据集的派生文件，上游 `nftechie/doomfly` 的构建脚本也能生成。
+**版本管理约定**：
+- `brain-v0-original`：训练前原始快照（已固定，不再变）
+- `brain-v1`、`brain-v2`…：每次训练/大改脑结构后发新 tag，旧版本保留可回滚
+- 发新版 = 在 https://github.com/zyj669915/doom/releases/new 拖文件上传（单文件限 2GB）
 
 ## 环境
 
