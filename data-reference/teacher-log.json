@@ -1,0 +1,152 @@
+[
+ {
+  "step": 1024,
+  "kills_mean": 2.0,
+  "elapsed_s": 38.6
+ },
+ {
+  "step": 2048,
+  "kills_mean": 1.6666666666666667,
+  "elapsed_s": 74.0
+ },
+ {
+  "step": 3072,
+  "kills_mean": 1.0,
+  "elapsed_s": 105.9
+ },
+ {
+  "step": 4096,
+  "kills_mean": 2.0,
+  "elapsed_s": 140.2
+ },
+ {
+  "step": 5120,
+  "kills_mean": 2.0,
+  "elapsed_s": 176.3
+ },
+ {
+  "step": 6144,
+  "kills_mean": 2.6666666666666665,
+  "elapsed_s": 212.3
+ },
+ {
+  "step": 7168,
+  "kills_mean": 2.6666666666666665,
+  "elapsed_s": 246.4
+ },
+ {
+  "step": 8192,
+  "kills_mean": 2.3333333333333335,
+  "elapsed_s": 280.4
+ },
+ {
+  "step": 9216,
+  "kills_mean": 2.6666666666666665,
+  "elapsed_s": 314.0
+ },
+ {
+  "step": 10240,
+  "kills_mean": 2.0,
+  "elapsed_s": 348.1
+ },
+ {
+  "step": 11264,
+  "kills_mean": 4.333333333333333,
+  "elapsed_s": 384.2
+ },
+ {
+  "step": 12288,
+  "kills_mean": 2.0,
+  "elapsed_s": 417.2
+ },
+ {
+  "step": 13312,
+  "kills_mean": 2.6666666666666665,
+  "elapsed_s": 449.8
+ },
+ {
+  "step": 14336,
+  "kills_mean": 2.3333333333333335,
+  "elapsed_s": 485.6
+ },
+ {
+  "step": 15360,
+  "kills_mean": 3.3333333333333335,
+  "elapsed_s": 520.2
+ },
+ {
+  "step": 16384,
+  "kills_mean": 3.0,
+  "elapsed_s": 553.0
+ },
+ {
+  "step": 17408,
+  "kills_mean": 3.6666666666666665,
+  "elapsed_s": 589.3
+ },
+ {
+  "step": 18432,
+  "kills_mean": 1.3333333333333333,
+  "elapsed_s": 623.9
+ },
+ {
+  "step": 19456,
+  "kills_mean": 0.6666666666666666,
+  "elapsed_s": 654.3
+ },
+ {
+  "step": 20480,
+  "kills_mean": 1.6666666666666667,
+  "elapsed_s": 689.9
+ },
+ {
+  "step": 21504,
+  "kills_mean": 1.0,
+  "elapsed_s": 723.0
+ },
+ {
+  "step": 22528,
+  "kills_mean": 2.0,
+  "elapsed_s": 758.6
+ },
+ {
+  "step": 23552,
+  "kills_mean": 0.0,
+  "elapsed_s": 794.2
+ },
+ {
+  "step": 24576,
+  "kills_mean": 2.3333333333333335,
+  "elapsed_s": 828.5
+ },
+ {
+  "step": 25600,
+  "kills_mean": 1.3333333333333333,
+  "elapsed_s": 864.1
+ },
+ {
+  "step": 26624,
+  "kills_mean": 2.0,
+  "elapsed_s": 899.8
+ },
+ {
+  "step": 27648,
+  "kills_mean": 1.0,
+  "elapsed_s": 934.6
+ },
+ {
+  "step": 28672,
+  "kills_mean": 1.0,
+  "elapsed_s": 965.3
+ },
+ {
+  "step": 29696,
+  "kills_mean": 1.6666666666666667,
+  "elapsed_s": 1001.3
+ },
+ {
+  "step": 30720,
+  "kills_mean": 1.3333333333333333,
+  "elapsed_s": 1037.0
+ }
+]

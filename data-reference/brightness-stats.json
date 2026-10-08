@@ -1,0 +1,15 @@
+{
+  "frame_srgb_mean_0_255": 76.22441101074219,
+  "frame_srgb_median_0_255": 92.33333587646484,
+  "frame_linear_mean_0_1": 0.09627754986286163,
+  "frame_linear_median_0_1": 0.12465238571166992,
+  "sample_srgb_mean_0_255": 62.461273193359375,
+  "sample_linear_mean_0_1": 0.0767727643251419,
+  "sample_pct_below_0_05_linear": 42.12893553223388,
+  "sample_pct_below_0_02_linear": 29.985007496251875,
+  "sample_pct_above_0_5_linear": 0.0,
+  "frame_pct_below_0_05_linear": 27.079427083333336,
+  "frame_pct_above_0_5_linear": 0.024088541666666668,
+  "linear_0_077_equals_srgb_approx": 78.40872226243533,
+  "srgb_128_equals_linear_approx": 0.21586050011389926
+}

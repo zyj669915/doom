@@ -1,0 +1,74 @@
+[
+ {
+  "config": "baseline",
+  "seed": 41027,
+  "tics": 174,
+  "kills": 1,
+  "health": -2,
+  "elapsed": 43.5
+ },
+ {
+  "config": "baseline",
+  "seed": 41028,
+  "tics": 196,
+  "kills": 1,
+  "health": -8,
+  "elapsed": 45.2
+ },
+ {
+  "config": "baseline",
+  "seed": 41029,
+  "tics": 206,
+  "kills": 1,
+  "health": -5,
+  "elapsed": 45.7
+ },
+ {
+  "config": "random",
+  "seed": 41027,
+  "tics": 194,
+  "kills": 0,
+  "health": -20,
+  "elapsed": 133.5
+ },
+ {
+  "config": "random",
+  "seed": 41028,
+  "tics": 210,
+  "kills": 0,
+  "health": 7,
+  "elapsed": 145.1
+ },
+ {
+  "config": "random",
+  "seed": 41029,
+  "tics": 210,
+  "kills": 0,
+  "health": 37,
+  "elapsed": 143.7
+ },
+ {
+  "config": "distilled",
+  "seed": 41027,
+  "tics": 210,
+  "kills": 1,
+  "health": 70,
+  "elapsed": 141.9
+ },
+ {
+  "config": "distilled",
+  "seed": 41028,
+  "tics": 210,
+  "kills": 0,
+  "health": 70,
+  "elapsed": 144.2
+ },
+ {
+  "config": "distilled",
+  "seed": 41029,
+  "tics": 210,
+  "kills": 2,
+  "health": 100,
+  "elapsed": 142.3
+ }
+]
