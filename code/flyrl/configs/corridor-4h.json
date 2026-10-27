@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "task": "corridor",
+  "arm": "real",
+  "algorithm": "dqn",
+  "seed": 41027,
+  "device": "cuda",
+  "frontend": "agc_motion",
+  "scale": 1.5,
+  "bias": 6.0,
+  "threshold": -48.0,
+  "max_env_steps": 20000,
+  "wall_hours": 4.0,
+  "calibration_steps": 128,
+  "hidden": 0,
+  "train_layouts": [
+    {"layout_id":"exit","layout_seed":101,"mirror":"left","lightlevel":224},
+    {"layout_id":"exit","layout_seed":102,"mirror":"right","lightlevel":224},
+    {"layout_id":"near_turn","layout_seed":103,"mirror":"left","lightlevel":224},
+    {"layout_id":"near_turn","layout_seed":104,"mirror":"right","lightlevel":224},
+    {"layout_id":"entry","layout_seed":105,"mirror":"left","lightlevel":224},
+    {"layout_id":"entry","layout_seed":106,"mirror":"right","lightlevel":224}
+  ],
+  "val_layouts": [
+    {"layout_id":"entry","layout_seed":201,"mirror":"left","lightlevel":200},
+    {"layout_id":"entry","layout_seed":202,"mirror":"right","lightlevel":200}
+  ],
+  "test_layouts": [
+    {"layout_id":"entry","layout_seed":301,"mirror":"left","lightlevel":176},
+    {"layout_id":"entry","layout_seed":302,"mirror":"right","lightlevel":176}
+  ],
+  "curriculum": {"exit":0.1,"near_turn":0.3,"entry":1.0}
+}

@@ -1,0 +1,1 @@
+{"route": "A6", "algorithm": "dqn", "seed": 41027, "wall_hours": 4, "max_game_tics": 200000, "output": "experiment/runs_next_research_20261025"}

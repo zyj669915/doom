@@ -1,0 +1,13 @@
+{
+  "output": "../runs_next/suite-A3-variants",
+  "runs": [
+    {"id":"A3-raw","config":"A3-raw-2h.json","resources":{"ram_gib":null,"commit_gib":null,"vram_gib":0}},
+    {"id":"A3-adapt","config":"A3-adapt-2h.json","resources":{"ram_gib":null,"commit_gib":null,"vram_gib":0}},
+    {"id":"A3-contrast","config":"A3-contrast-2h.json","resources":{"ram_gib":null,"commit_gib":null,"vram_gib":0}},
+    {"id":"A3-upstream","config":"A3-upstream-2h.json","resources":{"ram_gib":null,"commit_gib":null,"vram_gib":0}},
+    {"id":"A3-weak","config":"A3-weak-2h.json","resources":{"ram_gib":null,"commit_gib":null,"vram_gib":0}},
+    {"id":"A3-progress-delta","config":"A3-progress-delta-2h.json","resources":{"ram_gib":null,"commit_gib":null,"vram_gib":0}},
+    {"id":"A3-fixed","config":"A3-fixed-2h.json","resources":{"ram_gib":null,"commit_gib":null,"vram_gib":0}},
+    {"id":"A3-forward","config":"A3-forward-2h.json","resources":{"ram_gib":null,"commit_gib":null,"vram_gib":0}}
+  ]
+}

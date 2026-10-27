@@ -1,0 +1,44 @@
+# 虚拟环境
+.venv*/
+venv/
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+
+# 训练产物与运行时数据（体积巨大，不入版本库）
+runs/
+runs_next/
+runs_next_research_20261025/
+runs_stage_20261026/
+models/
+media/
+code/outputs/
+data-reference/brain-snapshot-v0/
+
+# 脑图与大体积数据
+*.npz
+*.pt
+*.feather
+*.arrow
+*.h5
+*.zip
+
+# 文档临时渲染工作区
+docs/_tmp_analysis/
+docs/_word_work/
+
+# 系统与编辑器
+.DS_Store
+Thumbs.db
+*.log
+!docs/**/*.md
+
+# ViZDoom 本地配置（含机器路径）
+_vizdoom.ini
+**/_vizdoom.ini
+
+# 环境变量
+.env
+.env.local

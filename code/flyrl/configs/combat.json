@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "task": "combat",
+  "arm": "real",
+  "algorithm": "dqn",
+  "seed": 41027,
+  "device": "cpu",
+  "frontend": "agc_motion",
+  "max_env_steps": 20000,
+  "max_tics": 2000,
+  "wall_hours": 8.0,
+  "calibration_steps": 128,
+  "hidden": 0
+}

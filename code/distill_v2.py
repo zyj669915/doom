@@ -34,15 +34,17 @@ class StudentV2(nn.Module):
     def forward(self, x):
         return self.net(x)
 
-def collect(teacher, n_episodes=8, max_tics=600, teacher_kind='rule'):
+def collect(teacher, n_episodes=8, max_tics=600, teacher_kind='rule', ridx=None, win=5, out_dir=None):
+    out_dir = Path(out_dir) if out_dir else OUT
     manifest = json.loads((ROOT/'outputs/doom/malecns_v1/manifest.json').read_text())
-    ridx = readout_indexes(manifest)
+    if ridx is None:
+        ridx = readout_indexes(manifest)
     feats, acts = [], []
     for ep in range(n_episodes):
         brain = Brain(ROOT/'outputs/doom/malecns_v1/graph.npz')
         brain.weight = (brain.weight * SCALE).astype(np.float32)
         game = Game(seed=SEEDS[ep % 3], scenario='combat_survival')
-        ring = np.zeros((WIN, len(ridx)), np.float32)
+        ring = np.zeros((win, len(ridx)), np.float32)
         done = False
         for t in range(max_tics):
             if game.game.is_episode_finished(): break
@@ -63,12 +65,13 @@ def collect(teacher, n_episodes=8, max_tics=600, teacher_kind='rule'):
             else:
                 game.act(index_to_action(a_idx))
         game.close()
-        print(f'ep {ep+1}/{n_episodes}: {len(feats)} frames', flush=True)
+        print(f'ep {ep+1}/{n_episodes}: {len(feats)} frames (ridx={len(ridx)} win={win} feat={len(ridx)*win})', flush=True)
     X = np.stack(feats).astype(np.float32)
     Y = np.array(acts, dtype=np.int64)
     mu, sd = X.mean(0), X.std(0) + 1e-6
-    np.savez(OUT/'distill-data.npz', X=(X-mu)/sd, Y=Y, mu=mu, sd=sd)
-    print('collected', X.shape, '| label dist:', np.bincount(Y, minlength=N_ACT))
+    np.savez(out_dir/'distill-data.npz', X=(X-mu)/sd, Y=Y, mu=mu, sd=sd,
+             ridx=np.asarray(ridx, dtype=np.int64), win=int(win))
+    print('collected', X.shape, '| label dist:', np.bincount(Y, minlength=N_ACT), flush=True)
     return X, Y, mu, sd
 
 def obs_vec_from(rgb):
@@ -85,7 +88,7 @@ def index_to_action_inv(a):
 
 def train_student(Xs, Y, epochs=80):
     torch.manual_seed(41027)
-    student = StudentV2()
+    student = StudentV2(feat=len(Xs[0]))
     opt = torch.optim.Adam(student.parameters(), lr=1e-3)
     Xt = torch.from_numpy(Xs); Yt = torch.from_numpy(Y)
     n = len(Y)
@@ -104,9 +107,12 @@ def train_student(Xs, Y, epochs=80):
                 'scale': SCALE, 'bias': BIAS, 'thresh': THRESH}, OUT/'student.pt')
     return student
 
-def evaluate(configs, tics=600):
+def evaluate(configs, tics=600, ridx=None, win=None):
     manifest = json.loads((ROOT/'outputs/doom/malecns_v1/manifest.json').read_text())
-    ridx = readout_indexes(manifest)
+    if ridx is None:
+        ridx = readout_indexes(manifest)
+    ridx = np.asarray(ridx, dtype=np.int64)
+    w = win if win is not None else WIN
     out = []
     for name, student in configs:
         for seed in SEEDS:
@@ -117,7 +123,7 @@ def evaluate(configs, tics=600):
             else:
                 bias, thresh = 12.0, -45.0
             game = Game(seed=seed, scenario='combat_survival')
-            ring = np.zeros((WIN, len(ridx)), np.float32)
+            ring = np.zeros((w, len(ridx)), np.float32)
             t0 = time.perf_counter()
             for t in range(tics):
                 if game.game.is_episode_finished(): break
@@ -158,17 +164,41 @@ def main():
     import argparse
     ap = argparse.ArgumentParser()
     ap.add_argument('--teacher', default='rule', choices=['rule', 'ppo'])
+    ap.add_argument('--teacher-path', default=None)
     ap.add_argument('--episodes', type=int, default=8)
     ap.add_argument('--tics', type=int, default=600)
     ap.add_argument('--reuse-data', action='store_true')
+    ap.add_argument('--out', default=None)
+    ap.add_argument('--readout-set', default=None)
+    ap.add_argument('--win', type=int, default=5)
     args = ap.parse_args()
+    global OUT
+    if args.out:
+        OUT = Path(args.out)
+        OUT.mkdir(parents=True, exist_ok=True)
+        print('output dir:', OUT)
+
+    ridx = None
+    if args.readout_set:
+        for npz in [ROOT/'outputs/doom/readout-groups/group_sets.npz',
+                    ROOT/'outputs/doom/readout-exp/selected_sets.npz']:
+            if npz.exists():
+                d = np.load(npz)
+                if args.readout_set in d.files:
+                    ridx = np.asarray(d[args.readout_set], dtype=np.int64)
+                    break
+        if ridx is None:
+            raise SystemExit(f'readout set {args.readout_set} not found in group_sets.npz / selected_sets.npz')
+        print(f'readout set: {args.readout_set} n={len(ridx)} win={args.win} feat={len(ridx)*args.win}', flush=True)
 
     if args.teacher == 'ppo':
         from teacher_ppo import Policy
         teacher = Policy()
-        ck = torch.load(ROOT/'outputs/doom/teacher-v1/teacher.pt', map_location='cpu', weights_only=True)
+        tp = Path(args.teacher_path) if args.teacher_path else ROOT/'outputs/doom/teacher-v1/teacher.pt'
+        ck = torch.load(tp, map_location='cpu', weights_only=True)
         teacher.load_state_dict(ck['policy']); teacher.eval()
         tkind = 'ppo'
+        print('teacher from', tp, flush=True)
     else:
         from rule_teacher_v2 import RuleTeacher
         teacher = RuleTeacher()
@@ -177,13 +207,15 @@ def main():
     if args.reuse-data and (OUT/'distill-data.npz').exists():
         d = np.load(OUT/'distill-data.npz')
         Xs, Y, mu, sd = d['X'], d['Y'], d['mu'], d['sd']
-        print('reused data', Xs.shape)
+        print('reused data', Xs.shape, flush=True)
     else:
-        Xs, Y, mu, sd = collect(teacher, args.episodes, args.tics, tkind)
+        Xs, Y, mu, sd = collect(teacher, args.episodes, args.tics, tkind,
+                                ridx=ridx, win=args.win, out_dir=OUT)
     student = train_student(Xs, Y)
     student.mu, student.sd = mu.astype(np.float32), sd.astype(np.float32)
-    random_s = StudentV2(); random_s.mu, random_s.sd = mu.astype(np.float32), sd.astype(np.float32)
-    evaluate([('random', random_s), ('distilled', student)], tics=args.tics)
+    random_s = StudentV2(feat=len(Xs[0])); random_s.mu, random_s.sd = mu.astype(np.float32), sd.astype(np.float32)
+    evaluate([('random', random_s), ('distilled', student)], tics=args.tics,
+             ridx=ridx, win=args.win)
 
 if __name__ == '__main__':
     main()

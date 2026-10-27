@@ -1,0 +1,12 @@
+{
+  "output": "../runs_next/suite-8h",
+  "runs": [
+    {"id":"A1-8h","config":"A1-8h.json","resources":{"ram_gib":null,"commit_gib":null,"vram_gib":0}},
+    {"id":"A2-8h","config":"A2-8h.json","resources":{"ram_gib":null,"commit_gib":null,"vram_gib":0}},
+    {"id":"A3-8h","config":"A3-8h.json","resources":{"ram_gib":null,"commit_gib":null,"vram_gib":0}},
+    {"id":"A4-8h","config":"A4-8h.json","resources":{"ram_gib":null,"commit_gib":null,"vram_gib":0}},
+    {"id":"A5-8h","config":"A5-8h.json","resources":{"ram_gib":null,"commit_gib":null,"vram_gib":0}},
+    {"id":"A6-8h","config":"A6-8h.json","resources":{"ram_gib":null,"commit_gib":null,"vram_gib":0}},
+    {"id":"A7-8h","config":"A7-8h.json","resources":{"ram_gib":null,"commit_gib":null,"vram_gib":0}}
+  ]
+}
