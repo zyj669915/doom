@@ -42,3 +42,6 @@ _vizdoom.ini
 # 环境变量
 .env
 .env.local
+
+# 实验循环的本地快日志（不入 git；正式记录在 docs/experiments.md）
+results.tsv

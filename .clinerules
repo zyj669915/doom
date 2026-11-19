@@ -1,0 +1,9 @@
+# 项目规则（Cline / Roo 等 IDE agent 读取）
+
+- 先读 `AGENTS.md`（事实与硬约束）和 `program.md`（运行协议），再动手。
+- 仓库 = `https://github.com/zyj669915/doom`；本地 `D:\doom`；产物在 `D:\experiment\`。
+- Python 用 `D:\fly\doomfly\.venv-neural\Scripts\python.exe`，命令带 `-I -B`。
+- 一次只改一个变量；改完**先 commit 再跑**；跑完按 `program.md` §3 判定，没到噪声带之外就回退。
+- 不碰：`data-reference/`、`models/`、冻结源码、`code/tests/`、权威脑图。
+- 不替人类提交在研代码；不自动启动 12h 长训；资源门禁不过就停，不改阈值。
+- 不被允许的表述："学会""显著提升""有效"。除非 val≥4 布局且四控归零且可重复。
