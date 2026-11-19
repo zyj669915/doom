@@ -1,0 +1,10 @@
+{
+  "protocol": "malecns-short-turn-v1",
+  "max_tics": 280,
+  "action_repeat": 4,
+  "gamma_tic": 0.999,
+  "max_turn": 6.0,
+  "ram_gib": 1.5,
+  "commit_gib": 2.0,
+  "output": "experiment/runs_turn_20261117"
+}

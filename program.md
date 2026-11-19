@@ -15,6 +15,15 @@
 
 所以**一轮 = 一次 10k tic pilot + 冻结评估**，不是几分钟的小实验。别照搬"5 分钟一次"的模板。
 
+### 0.1 路径（两台机器不同，命令里的 `<REPO>` 按下表替换）
+
+| 机器 | `<REPO>` | run 产物 |
+|---|---|---|
+| ZYJ（本机） | `D:\fly\experiment` | `D:\fly\experiment\runs_stage_20261026\` |
+| 旧机 | `D:\doom` | `D:\experiment\runs_stage_20261026\` |
+
+`python` 两机相同：`D:\fly\doomfly\.venv-neural\Scripts\python.exe`，调用带 `-I -B`。
+
 ## 1. 预算
 
 - 单轮 ≤ **2 小时**（10k tic + 评估 + 记账）。
@@ -52,7 +61,7 @@
 2. **门禁**：`flyrl_stage_cli.py doctor --config <cfg>`。`allowed: false` → 停，报错误原因，**这不叫崩溃，不许重试绕过**。
 3. **改**：只动 §2 可编辑文件；一次只改一个变量（读出头宽 / lr / gamma / 课程 / 观测表征）。
 4. **先提交**：`git add -A; git commit -m "exp(<id>): <一句话>"`。
-5. **跑**：`flyrl_stage_cli.py train --config <cfg> --max-game-tics 10000`，输出重定向到 `D:\experiment\logs\<id>.log`，不要让日志灌进上下文。
+5. **跑**：`flyrl_stage_cli.py train --config <cfg> --max-game-tics 10000`，输出重定向到 `<REPO>\logs\<id>.log`，不要让日志灌进上下文。
 6. **评**：`evaluate --checkpoint <本次 checkpoint 目录> --split val`；需要归因时再跑 `--policy random` / `--policy untrained`。
 7. **判**：按 §3 判定 keep / pilot-only / noise / discard / crash。
 8. **处置**：keep → §5 保存；其余 → `git reset --hard HEAD~1`。
@@ -64,7 +73,7 @@
 `keep` 必须四件齐全：
 
 1. **代码**：commit 在 `exp/<tag>` 分支（该分支只进不退）。
-2. **checkpoint**：把 `D:\experiment\runs_stage_20261026\<run>\checkpoint-<steps>-<id>\` 整个目录复制到 `D:\experiment\best\<id>\`（仓库外，不进 git）。
+2. **checkpoint**：把 `<REPO>\runs_stage_20261026\<run>\checkpoint-<steps>-<id>\` 整个目录复制到 `<REPO>\best\<id>\`（不进 git）。
 3. **manifest**：同目录写 `manifest.json`：配置快照、seed、tic 数、val 各布局结果、四控结果、`sha256`（checkpoint 内每个文件）、**完整复现命令**。
 4. **登记**：`docs/experiments.md` 追加一行，含 id / commit / val 成绩 / 四控 / sha256 前 16 位 / 复现命令。
 

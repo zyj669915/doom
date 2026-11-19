@@ -1,0 +1,49 @@
+{
+  "date": "2026-11-17",
+  "task": "T010",
+  "protocol": "malecns-short-turn-learning-v1",
+  "scope": "独立训练适配开发验证；替身环境、小向量与合成受体图，不是完整脑或真实游戏",
+  "status": "completed_development_validation",
+  "passed": true,
+  "targeted_regression": {
+    "ran": 175, "errors": 0, "failures": 0, "skipped": 0, "duration_seconds": 7.180,
+    "new_adapter_tests": 64,
+    "command": "python -I -B -c: import torch first; torch.set_num_threads(1); explicit code/tests paths; unittest modules test_flyrl_environment, test_flyrl_encoding, test_flyrl_stage_resources, test_flyrl_stage, test_flyrl_turn, test_flyrl_turn_acceptance, test_flyrl_turn_train, test_flyrl_turn_train_cli, test_flyrl_turn_train_storage, test_flyrl_next_learning, test_flyrl_next_encoding"
+  },
+  "independent_review": {
+    "confirmed_findings": 4,
+    "fixed": [
+      "SIGINT requests boundary stop; unexpected failure records completed and in-flight costs, rejects automatic resume of failed run instead of saving partial optimizer state",
+      "final CLI stop veto clears frozen evaluation success_rate",
+      "evaluation rechecks full provenance before issuing complete score; each reset assets recorded",
+      "macro_max_progress includes intermediate tic peaks via read-only environment proxy"
+    ],
+    "added_regression_tests": 6,
+    "reviewer_reran_after_fixes": false,
+    "parent_final_regression_passed": true
+  },
+  "old_real50k_sources": {"files": 55, "missing_or_changed": [], "graph_or_checkpoint_loaded": false},
+  "development_config_sha256": {
+    "frontend-dev.json": "05abefbca2e4461f87bbebeeed595afccfec96cf17bd3f37a737c6049e275b2e",
+    "real-dev.json": "62940fd35269d028d5c9d3190e4a4a66452e650e0d1b848a31167f7e1685a720"
+  },
+  "research_structure": {"markdown_files": 32, "relative_links": 156, "allow_active_tasks": false, "strict_evidence": true, "errors": [], "warnings": []},
+  "git_diff_check_exit_code": 0,
+  "limitations": [
+    "No actual ViZDoom/full-brain acceptance, throughput or source-input runtime revalidation; training protocol remains draft.",
+    "Unexpected failed-run resume requires separate cost audit; this is not a general cross-run lineage ledger and cannot prevent manual older-checkpoint budget reuse.",
+    "checkpoint_write_seconds excludes final manifest/rename/latest commit I/O; controlled stop checks include the whole current execution.",
+    "Fixed slot only coordinates the new adapter CLI, not historical entrypoints.",
+    "Killed processes/system failures cannot guarantee latest cost record; no claim of exact game restoration."
+  ],
+  "actual_cli": {"real_validate_exit_code": 0, "frontend_validate_exit_code": 0, "help_exit_code": 0},
+  "first_regression_attempt": {"tests_executed": false, "error": "torch c10.dll WinError1114 during import; rerun with torch imported first and one thread passed; no dependencies changed"},
+  "training_started": false,
+  "synthetic_environment_optimization_tested": true,
+  "real_game_started": false,
+  "full_brain_loaded": false,
+  "confirm_consumed": false,
+  "old_checkpoint_loaded": false,
+  "dependencies_changed": false,
+  "committed_or_pushed": false
+}

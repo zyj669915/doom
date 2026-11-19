@@ -1,0 +1,48 @@
+{
+  "date": "2026-11-17",
+  "task": "T020",
+  "protocol": "malecns-short-turn-learning-v1",
+  "status": "blocked_at_resource_preflight",
+  "passed": false,
+  "scope": "real/frontend串行无优化链路验收，计划各最多256总tic和600秒；本次在doctor准入阶段停止",
+  "preflight": {
+    "command": "D:/fly/doomfly/.venv-neural/Scripts/python.exe -I -B D:/fly/experiment/code/flyrl_turn_train_cli.py doctor --config D:/fly/experiment/configs_turn_train/real-dev.json",
+    "exit_code": 3,
+    "run": "runs_turn_train_20261117/20261117-202401-doctor-real-eaebb7e1",
+    "result": "runs_turn_train_20261117/20261117-202401-doctor-real-eaebb7e1/result.json",
+    "admission": "runs_turn_train_20261117/20261117-202401-doctor-real-eaebb7e1/admission.json",
+    "allowed": false,
+    "resource_sample_ok": true,
+    "ram_available_bytes": 4602937344,
+    "ram_required_including_reserve_bytes": 4831838208,
+    "ram_shortfall_bytes": 228900864,
+    "commit_available_bytes": 5695426560,
+    "commit_required_including_reserve_bytes": 5368709120,
+    "reason": "RAM低于1.5GiB任务预算加固定3GiB余量；commit满足2GiB预算加3GiB余量"
+  },
+  "execution": {
+    "real_accept": "not_started_after_preflight_rejection",
+    "frontend_accept": "not_started_after_preflight_rejection",
+    "game_tics": 0,
+    "initial_observation_tics": 0,
+    "updates": 0,
+    "calibration_tics": 0,
+    "full_brain_loaded": false,
+    "real_game_started": false,
+    "training_started": false,
+    "confirm_consumed": false,
+    "runtime_input_hashes_checked": false,
+    "automatic_retry_scheduled": false
+  },
+  "workspace": {
+    "active_locks_found_before_attempt": false,
+    "other_python_processes_seen": true,
+    "other_processes_terminated": false,
+    "source_or_config_changed": false,
+    "dependencies_changed": false,
+    "safety_thresholds_lowered": false,
+    "committed_or_pushed": false
+  },
+  "interpretation": "仅证明资源拒绝路径实际执行；T020未完成，不是学习方法阴性，也不否定既有136局环境验收。资源快照不是持续可用量。",
+  "next_gate": "资源恢复后重新准入并执行同一限额accept；不关闭用户程序、不降低预算、不自动轮询或扩大训练。T015总成本仍缺本任务实测吞吐/峰值。"
+}

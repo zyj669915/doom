@@ -1,13 +1,15 @@
 # DOOMFLY：果蝇全脑连接组接入 ViZDoom 闭环实验
 
-> 本文件是项目总入口与快速导航。撰写日期 2026-10-26。
+> 本文件是项目总入口与快速导航。更新日期 2026-11-17。
+> **科研工作入口：**[research/README.md](research/README.md)，其中 [研究目标](research/CHARTER.md)、[当前状态](research/STATUS.md)、[任务板](research/TASKS.md) 分别维护目标、事实和下一步；[prompts/](prompts/README.md) 提供AI协作提示词。
+> **当前决策依据：**[项目目标与路线决策](docs/reports/项目目标与路线决策_20261117.md)。主目标是完整连接组参与的可重复视觉行为学习，不是完成旧队列；短程转角环境已实现并有原版136局实机证据，修复版通过82项关联回归、未重跑实机。独立训练适配已实现并通过开发测试、全脑实机待验，冻结脑读出是近期主线，受约束脑内参数学习是条件触发备选。下方历史路线与排期不自动授权执行。
 > 项目文化：保留阴性结果、失败实验与建模假设，不用"再训几小时就会玩"代替证据。
 
 ## 一句话定位
 
-把果蝇 *Drosophila melanogaster* 全脑连接组 **MaleCNS v1.0**（166,700 个神经元、25,582,938 条有向突触边）的神经仿真接入 ViZDoom/DOOM，让游戏画面驱动视网膜输入、神经活动在完整保留的连接图上传播、再由固定的神经元→按键接口控制游戏，以此检验"连接组约束的神经活动能否支持学习到的有效行为"。
+把果蝇 *Drosophila melanogaster* 全脑连接组 **MaleCNS v1.0**（166,700 个神经元、25,582,938 条有向突触边）的神经仿真接入 ViZDoom/DOOM，让游戏画面驱动视网膜输入、神经活动在完整保留的连接图上传播、再由当前可学习外部读出及固定动作接口控制游戏，以此检验"连接组约束的神经活动能否支持学习到的有效行为"。
 
-**当前状态（2026-10-26）：工程闭环已打通，完整脑已参与视觉—动作闭环并跑过训练；但尚未证明完整连接组能可靠学会游戏，也未证明真实拓扑比合理重连或纯像素前端更有优势。** 较早 val 6/12 的成绩来自不含脑的纯像素 CNN 模型（A6），不能算作果蝇脑成功。
+**当前状态（2026-11-17核实）：工程闭环已打通，real单seed已累计完成50k训练，40个完整训练episode无通关；0/10k/30k quick-val均0/4，50k完整val在第8局因RAM保护中断。rewired/frontend仅完成资源验收，三组正式比较未完成。** 尚未证明可靠视觉学习或真实拓扑优势。较早A6 val6/12来自不含脑的CNN；当前原run目录未见，只按历史记录引用，不能算果蝇脑成功。
 
 ## 两个嵌套仓库
 
@@ -29,15 +31,21 @@
 
 ## 闭环架构
 
+当前real/rewired阶段栈：
+
 ```
-ViZDoom RGB 帧 (640×480)
-  → retinal_samples：3,335 个 R1–R6 亮度输入（v6 另加 811 个 R8 颜色代理）
-  → 全脑 LIF 动力学（dt=0.1ms，每游戏帧推进 50ms 神经时间）
-  → NeuralControls.decode：DNp20 左右放电差 → 转向；DNpe017 → 前进 + 开火
-  → 三个按键：转向 / 前进 / 开火
+ViZDoom RGB（35Hz）
+  → 3,335 个 R1–R6 受体采样＋AGC-motion工程前处理
+  → 完整MaleCNS冻结LIF（dt=0.1ms，每tic累计推进约28.571ms）
+  → 全脑神经元Hz按精确ID投影到512个signed-hash桶
+  → 50/200ms双trace、asinh与快慢差，合计1536维
+  → train-only固定校准 → MLP DoubleDQN外部读出
+  → 六动作：转向{-6,0,+6}×前进{0,20}，每4tic决策
 ```
 
-关键边界：动作解码只接收 spike count 和时间，**不接收坐标、敌人、生命值或奖励**；health/kills/ammo 仅用于观察审计。上游 v6 曾尝试在 4,184 条 KC→MBON11 边上做多巴胺门控可塑性，但未通过视觉、条件化与生存验证门，作为阴性结果保留。
+frontend使用相同受体采样/前处理及1536维表征，但不经过脑动力学。当前任务不含开火。策略不接收坐标、角度、敌人或生命；环境遥测可计算奖励/终止及审计，**不能用于选动作或脱困**。训练只更新外部读出，不更新脑内突触。
+
+历史上游BCI曾以DNp20/DNpe017固定映射控制运动/开火，上游v6另尝试R8代理及局部可塑性，未通过相关验证门。这些不是当前stage的读出方式或已验证机制；尤其不能将双trace的50ms时间常数误写为当前每tic推进50ms。
 
 ## 连接组与文献基础
 
@@ -53,7 +61,7 @@ ViZDoom RGB 帧 (640×480)
 - **视觉系统连接组约束模型（FlyVis）**：Lappalainen et al., *Nature* 634:1132–1140, 2024. DOI 10.1038/s41586-024-07939-3。
 - **多巴胺记忆动力学**：Huang et al., *Nature* 634:1141–1149, 2024. DOI 10.1038/s41586-024-07819-w。
 
-三份 `graph.npz` 字节一致（SHA-256 `f4d41f01…b1d1`），证明脑图在实验中从未被改写。
+历史核验记录三份 `graph.npz` 字节一致（SHA-256 `f4d41f01…b1d1`），这是当时快照证据，不证明所有时间点从未被改写；本次未重hash大图，恢复运行仍须检查输入强哈希。
 
 ## 已尝试的路线与当前决策
 
@@ -63,14 +71,24 @@ ViZDoom RGB 帧 (640×480)
 | PPO 老师 → 蒸馏学生 / 离线 FQI | 走廊老师 100% 出口率但用了学生看不到的引擎 ANGLE 特权输入；所有学生闭环出口率 0 | 保留为历史诊断，不再作主线 |
 | A0：246 维完整脑 + 线性 DQN | 20,000 tic 正式训练，entry 0/6、冻结 val 0/2 | 历史阴性锚点，不加时 |
 | A1：群体时序/差分 + MLP DQN | 有实现，全脑实机验收被资源门禁阻塞 | 唯一读出备选 |
-| **A2：全脑固定 ID hash + MLP DQN** | 有实现，缺新协议全脑结果 | **选为主实验起点**，需补 real/rewired/frontend 三 arm 匹配 |
+| **A2：全脑固定 ID hash + MLP DQN** | 独立stage的real已累计50k、无通关，完整val未完；两对照仅验收 | 不原样扩训旧长任务；新短任务上作一次有限验证，再按失败证据分流 |
 | A3：感觉/动力学候选 + A2 读出 | 有多套配置，无可靠行为比较 | 条件触发，最多比较一个备选因素 |
 | A4：运动视觉 + CNN PPO | 280k tic，quick-val 0/4，动作塌缩 | 暂停扩训 |
 | A5：像素 + CNN PPO | 437k tic，quick-val 0/4 | 暂停扩训 |
-| A6：像素 + CNN DoubleDQN | 186k tic 开发 val 6/12；8h 后过拟合退到 2/12；三 seed 复现 1/0/0 | 保留 checkpoint 作参考，不再加训 |
+| A6：像素 + CNN DoubleDQN | 186k tic 开发 val 6/12；8h 后退到 2/12；三个200k终点为1/0/0 | 保留历史参考；本机原产物缺失，未重新核验，不再加训 |
 | A7：像素+脑融合 PPO | 有实现，未完成全脑验收 | 暂缓 |
 
-## 当前排期（2026-10-26 R3 方案）
+## 当前实施顺序（2026-11-17建议，尚未开始新任务训练）
+
+1. 独立短程左右转角环境与奖励/终止/镜像测试已实现；独立复核边界修复后共26项新测试、关联回归82项通过，旧实验未改。
+2. 真实环境136局验收已通过：名义左右108tic可达，恒定动作0/12、固定序列各6/12、随机1/12。仅环境验收，不是学习成功；详见[验收记录](docs/SHORT_TURN_ACCEPTANCE_20261117.md)。独立训练适配已实现并完成开发测试，见[适配验收](docs/SHORT_TURN_TRAIN_ADAPTER_20261117.md)；下一步做完整脑新任务短验收并锁定总预算，不先扩训CNN。
+3. 完整冻结脑＋匹配frontend各最多30k筛查，固定0/10k/30k评估，不自动续接旧三组队列。
+4. real通过且有视觉依赖才做独立seed与confirm；失败按新决策表定位，不只加时。
+5. 少量受约束脑内参数学习仅作为条件备选；可靠行为建立后再检验合理null下的拓扑贡献。
+
+详见[完整决策与停止条件](docs/reports/项目目标与路线决策_20261117.md)。短任务环境入口已有validate/doctor/accept，新增独立训练入口支持train/accept/dev评估与恢复，开发测试通过但未验全脑实机；脑内备选仍未实现，正式筛查协议仍待锁定。
+
+## 历史排期（2026-10-26 R3，不再默认执行）
 
 1. **P0 锁定协议**：near_turn 短任务、同光照、左右平衡，先确认任务不能被简单脚本近乎满分解决。
 2. **P1 三 arm 工程/资源验收**：real（真实脑图）/ rewired（约束重连 null）/ frontend（纯像素前端，无脑），各 256 tic 受控验收。
@@ -84,19 +102,24 @@ ViZDoom RGB 帧 (640×480)
 ## 目录导航
 
 ```
-code/                  全部实验脚本（flyrl / flyrl_next / flyrl_stage 三个栈）
-docs/PROGRESS.md       权威进度档案（逐 run 结果与证据口径）
-docs/SNAPSHOT.md       当前快照
-docs/STAGE_TRAINING_20261026.md  三 arm 训练执行记录
-docs/reports/          本项目三份核心分析报告（从仓库根迁入）
-data-reference/        小体积校准/诊断 JSON
-models/                teacher.pt / student.pt（历史产物）
-runs/ runs_next/ runs_next_research_20261025/ runs_stage_20261026/  训练与评测产物
+AGENTS.md              AI 协作、授权与冻结保护
+research/              研究目标、当前状态、任务、协议、证据和决策
+prompts/               共同上下文＋8类科研角色提示词
+code/                  flyrl / flyrl_next / flyrl_stage；独立flyrl_turn环境与测试
+configs_stage/ configs_turn/   现有阶段配置与短任务环境配置
+docs/PROGRESS.md        逐次进度历史，当前快照看research/STATUS.md
+docs/SNAPSHOT.md        历史快照，不作实时状态
+docs/STAGE_TRAINING_20261026.md  旧三arm执行记录
+docs/reports/           详细分析与历史路线依据
+data-reference/         小体积校准/诊断 JSON
+runs_stage_20261026/ runs_turn_20261117/   本机当前原始产物
+scripts/               现有脑图获取脚本及只读科研结构检查器
 ```
 
 ## 核心文档索引
 
-- [科研复盘与下一阶段方案 R3](docs/reports/果蝇闭环游戏_科研复盘与下一阶段实验方案_20261025.md) — 当前主报告
+- [项目目标与路线决策（2026-11-17）](docs/reports/项目目标与路线决策_20261117.md) — 当前目标、任务、路线与转向条件
+- [科研复盘与下一阶段方案 R3](docs/reports/果蝇闭环游戏_科研复盘与下一阶段实验方案_20261025.md) — 历史分析与证据口径，执行优先级按新决策
 - [多路线训练与验证方案](docs/reports/果蝇闭环游戏_多路线训练与验证方案.md) — A1–A7 方法学与预登记
 - [MaleCNS 闭环实验分析与诊断报告](docs/reports/果蝇MaleCNS连接组闭环游戏实验_分析报告.md) — 全链路审计与历史 bug
 - [Claude 完整分析](docs/reports/claude_analysis_full.md) — 早期只读审查
@@ -106,11 +129,11 @@ runs/ runs_next/ runs_next_research_20261025/ runs_stage_20261026/  训练与评
 
 ## 环境与复现
 
-- Windows 11，Python 3.11，`D:/fly/doomfly/.venv-gpu/Scripts/python.exe`
-- numpy 2.4.6 / numba 0.68 / torch 2.11+cu128 / vizdoom 1.3.2
-- 全脑仿真走 CPU Numba，GPU 仅加速小读出；RTX 4060 Laptop 8GiB
+- Windows 11；多个历史环境并存，不能把旧依赖表当作当前统一锁定环境。11月17日短任务实机使用既有 `.venv-neural`、ViZDoom 1.3.1，实际版本见该run的provenance。
+- 旧 `.venv-gpu` 与其numpy/torch/CUDA版本仅属历史配置；恢复任何run仍须核验实际解释器、依赖与输入来源，不因本文修改安装或升级。
+- 全脑仿真走 CPU Numba；当前stage读出也在CPU，GPU环境存在不等于全脑已加速。RTX 4060 Laptop 8GiB。
 - 大体积脑图（graph.npz 239MB、edges.feather 1GB）从 GitHub Releases 拉取，脚本见 `scripts/fetch_brain.ps1`
 
 ## 诚实声明
 
-这是一个**保留 MaleCNS 图结构、用近似 LIF 动力学、靠工程化神经元→按键映射控制 ViZDoom 的闭环实验**。动作映射是 engineered controller assignments，不是已证实的天然运动功能；不是字面意义上的活果蝇脑重建；当前训练的是外部读出而非脑内权重。 passing 软件测试不等于生物有效性，通过走廊不等于生理视觉。
+这是一个**保留 MaleCNS 图结构、用近似 LIF 动力学、当前通过可学习外部读出控制 ViZDoom 的闭环实验**。动作映射是 engineered controller assignments，不是已证实的天然运动功能；不是字面意义上的活果蝇脑重建；当前训练的是外部读出而非脑内权重。 passing 软件测试不等于生物有效性，通过走廊不等于生理视觉。

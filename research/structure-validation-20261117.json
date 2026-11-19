@@ -1,0 +1,75 @@
+{
+  "date": "2026-11-17",
+  "scope": "本地科研结构、提示词与导航验证，不是学习或生理验收",
+  "status": "completed",
+  "passed": true,
+  "checks": [
+    {
+      "name": "research_structure",
+      "command": "D:/fly/doomfly/.venv-neural/Scripts/python.exe -I -B D:/fly/experiment/scripts/check_research_structure.py --strict-evidence",
+      "exit_code": 0,
+      "markdown_files_checked": 32,
+      "relative_links_checked": 147,
+      "allow_active_tasks": false,
+      "strict_evidence": true,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "checker_regression",
+      "command": "D:/fly/doomfly/.venv-neural/Scripts/python.exe -I -B D:/fly/experiment/scripts/test_check_research_structure.py",
+      "exit_code": 0,
+      "ran": 10,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "duration_seconds": 0.058,
+      "coverage": [
+        "task states, duplicate IDs, active-task closeout and empty task board",
+        "required prompt sections and fenced examples",
+        "Unicode relative links, broken document links and absent evidence policy",
+        "required files, protocol states and entry navigation"
+      ]
+    },
+    {
+      "name": "old_real50k_source_hashes",
+      "manifest": "runs_stage_20261026/real/20261026-201524-train-real-761edd2a/checkpoint-000050000-9d0f5a7f/manifest.json",
+      "method": "isolated standard-library Python; compare each provenance.sources SHA256 against current file bytes",
+      "source_files": 55,
+      "missing_or_changed": [],
+      "exit_code": 0,
+      "graph_or_checkpoint_loaded": false
+    },
+    {
+      "name": "git_diff_whitespace",
+      "scope": [".gitignore", "README.md", "PROJECT_INTRO.md", "docs/PROGRESS.md", "docs/reports/项目目标与路线决策_20261117.md"],
+      "exit_code": 0,
+      "notes": "Only existing LF-to-CRLF notices; no whitespace errors. Untracked new files are covered by structure checks, not this git diff."
+    },
+    {
+      "name": "run_outputs_ignored",
+      "pattern": "runs_turn_*/",
+      "method": "git check-ignore runs_turn_20261117/20261117-172347-accept-258e2255/result.json",
+      "matched": true,
+      "existing_outputs_deleted": false
+    }
+  ],
+  "resolved_execution_issues": [
+    "First PowerShell inline Python hash command lost quotation marks and raised SyntaxError; no target modification. Isolated Bash heredoc retry passed.",
+    "First checker console output used incompatible encoding for Chinese; explicit UTF-8 stdout added and checker plus all tests rerun successfully."
+  ],
+  "limitations": [
+    "Local path existence only; no fragment anchors or external-page validation.",
+    "Research/prompts/AGENTS scanned; legacy documents checked only for new research navigation.",
+    "No revalidation of brain data, checkpoint payloads, environment or scientific conclusions.",
+    "Original 136-episode live run predates boundary fixes; fixed version was not rerun live.",
+    "New text files have not been committed, pushed or verified on another machine."
+  ],
+  "training_started": false,
+  "game_started": false,
+  "external_model_called": false,
+  "dependencies_changed": false,
+  "committed_or_pushed": false,
+  "sync_script_run": false,
+  "published": false
+}

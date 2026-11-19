@@ -1,0 +1,13 @@
+{
+  "protocol": "malecns-short-turn-learning-v1",
+  "environment_protocol": "malecns-short-turn-v1",
+  "arm": "real",
+  "seed": 41027,
+  "projection_seed": 23,
+  "max_game_tics": 30000,
+  "wall_hours": 6.0,
+  "eval_wall_hours": 1.0,
+  "ram_gib": 1.5,
+  "commit_gib": 2.0,
+  "output": "experiment/runs_turn_train_20261117"
+}

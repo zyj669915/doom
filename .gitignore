@@ -12,6 +12,8 @@ runs/
 runs_next/
 runs_next_research_20261025/
 runs_stage_20261026/
+runs_turn_*/
+TURN_TRAIN_ACTIVE.lock
 models/
 media/
 code/outputs/
