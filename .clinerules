@@ -1,7 +1,7 @@
 # 项目规则（Cline / Roo 等 IDE agent 读取）
 
 - 先读 `AGENTS.md`（事实与硬约束）和 `program.md`（运行协议），再动手。
-- 仓库 = `https://github.com/zyj669915/doom`；本地 `D:\doom`；产物在 `D:\experiment\`。
+- 仓库 = `https://github.com/zyj669915/doom`；本地路径两机不同：本机 `D:\fly\experiment`，旧机 `D:\doom`（详见 `AGENTS.md` R1、`program.md` §0.1）。产物在 `<REPO>\runs_stage_20261026\`。
 - Python 用 `D:\fly\doomfly\.venv-neural\Scripts\python.exe`，命令带 `-I -B`。
 - 一次只改一个变量；改完**先 commit 再跑**；跑完按 `program.md` §3 判定，没到噪声带之外就回退。
 - 不碰：`data-reference/`、`models/`、冻结源码、`code/tests/`、权威脑图。

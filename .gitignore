@@ -47,3 +47,7 @@ _vizdoom.ini
 
 # 实验循环的本地快日志（不入 git；正式记录在 docs/experiments.md）
 results.tsv
+
+# 自转循环产物：best 快照里的 checkpoint 与训练日志都是大文件，不入库
+best/
+logs/

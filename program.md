@@ -129,6 +129,6 @@ id	commit	tics	val	ctrl	status	desc
 ## 12. 回退纪律
 
 - 只回退一个实验：`git reset --hard HEAD~1`，且仅当该 commit 只含本次实验改动。
-- **训练产物在仓库外**（`D:\experiment\`），回退不会删 run 与 checkpoint——这是故意的。
+- **训练产物不进 git**（`<REPO>\runs_stage_20261026\`、`<REPO>\best\` 均在 `.gitignore` 内），回退不会删 run 与 checkpoint——这是故意的。
 - 回退前确认 `results.tsv` 已写入该行。
 - 永不 `git clean -fd`。
