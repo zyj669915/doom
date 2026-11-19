@@ -15,6 +15,18 @@
 
 ⚠️ 文档里出现的 `D:/fly/experiment/...` 是历史路径，**该目录已不存在**。入口改用 `D:\doom\code\...`。
 
+### 1.1 运行布局（代码按固定结构解析路径，必须知道）
+
+代码用 `ROOT/experiment/code/...` 定位源码，实测 `ROOT = D:\`。因此本机建了目录联接：
+
+| 联接 | 指向 | 原因 |
+|---|---|---|
+| `D:\experiment\code` | `D:\doom\code` | 代码找 `D:\experiment\code\flyrl_stage_cli.py` |
+
+- 仓库仍在 `D:\doom`，联接只是让旧路径能解析，**不改代码**。
+- 产物落 `D:\experiment\runs_stage_20261026\<run>\`，与仓库分离。
+- 若换机器，需重建同样布局，否则 `train` 会报 `FileNotFoundError: D:\experiment\code\flyrl_stage_cli.py`。
+
 ## 2. 入口
 
 | 入口 | 用途 |
@@ -47,6 +59,8 @@ cd D:\doom
 - `doctor --config configs_stage/near_turn_three_arm_v1.json` → `"allowed": true`，`"errors": []`。
 - 资源：RAM 可用 14.6 GiB，commit 可用 9.1 GiB，满足 1.5+3 GiB 需求。
 - 报告：`D:\experiment\runs_stage_20261026\preflight-20261119-175733-eb8811a7.json`。
+- **门禁的真实瓶颈是 commit，不是 RAM**：需要 `2 GiB 预算 + 3 GiB 固定余量 = 5.37 GB`。2026-11-19 实测 RAM 可用 11.4 GB（够），commit 可用 5.20 GB（**差 170 MB 被拒**，`stop: resource_gate_rejected`）。
+- 处置口径：**不降阈值、不关用户程序、不自动重试**。释放 commit（关掉占内存的程序）后重新过门禁。
 
 ## 5. 当前真实进度（不许美化）
 
