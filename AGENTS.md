@@ -92,6 +92,21 @@ cd D:\fly\experiment
 - 2026-11-19 旧机实测：RAM 可用 11.4 GB（够），commit 可用 5.20 GB → **差 170 MB 被拒**，`stop: resource_gate_rejected`。
 - 处置：**不降阈值、不关用户程序、不自动重试**；释放 commit 后重新过门禁。
 - 已成功的 `doctor`：`allowed: true`、`errors: []`。
+- 2026-11-19 本机（ZYJ）实测 `allowed: false`：`ram_available_bytes = 2.78 GB`，低于「1.5 GiB 预算 + 3 GiB 余量」；`commit_available_bytes = 9.63 GB`（commit 够）。
+- 结论：**这台机器当前被 RAM 卡住，不是 commit**。等内存释放再跑，不许降阈值。
+
+## R3.1 已有基线结果（`runs_stage_20261026`，2026-10-26）
+
+| run | arm | tics | val 布局数 | success_rate |
+|---|---|---|---|---|
+| `20261026-163513-eval-val-real-57e90714` | real | 10k | 4 | 0.0000 |
+| `20261026-170217-eval-val-real-13d300e5` | real | 10k | 4 | 0.0000 |
+| `20261026-172747-eval-val-real-a982766d` | real | 10k | 4 | 0.0000 |
+| `20261026-194940-eval-val-real-6a9bfeb6` | real | 30k | 4 | 0.0000 |
+
+- 全脑 real arm 在 4 布局 val 上是**地板（0/4）**，`max_progress` 0.44–0.85 但一局未成功。
+- 意义：ratchet 的基线是 0.0，判定门槛"绝对提升 ≥1 局"才真正可判——不需要先扩 val 布局（配置已经是 4 布局）。
+- 已登记在 `results.tsv`（当地快日志，不入库）。
 
 ## R4. 成本量级（全脑在 CPU，约 2.46 tic/s）
 
